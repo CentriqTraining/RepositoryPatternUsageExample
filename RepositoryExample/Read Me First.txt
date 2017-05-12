@@ -1,0 +1,44 @@
+Set up instructions:
+
+1)  Create your entity framework components as normal & build
+
+In my case, I have created an employee class, a Context class 
+and a database initializer which will drop and recreate the 
+database each time I run the application.
+
+2)  Create your Controller as normal
+
+3)  create an interface that contains all the methods you want 
+to have in your repository
+
+In my case, I created a generic IRepository<T> so that I could 
+use it on any model class I wanted going forward.
+
+4)  Create a repository that implements IRepository<Employee> and
+provide implementations for each of the required methods using 
+the entity framework context.
+
+5)  For Testing, you can create a fake Employee Repository which 
+also implements the IRepository<Employee> interface, but uses 
+test data and does not interact with the database.
+
+6)  Create a static Factory class that returns an instance of your
+newly created Repository class
+
+7)  Alter your HomeController:  
+
+	a)  Remove the DB reference and place instead a reference of
+	type IRepository<Employee>
+	b)  Go to each area of code that is now in error and change 
+	them to use the Repository object instead of DB, calling the
+	appropriate method.
+	c)  Create a default constructor and within it, make a call to
+	your newly created Factory class and assign that to your 
+	repository variable created in a).
+	d)  Create another constructor that takes as a parameter of 
+	type IRepository<Employee>...assign whatever is passed to this
+	same variable assigned in the other constructor
+
+8)  When you create your tests, create an instance of your fake 
+repository and then create an instance of your controller in your 
+tests passing in that repository.
